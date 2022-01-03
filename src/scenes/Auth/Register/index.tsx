@@ -22,17 +22,28 @@ import {
 } from './styles';
 
 interface FormData {
+  name: string;
   email: string;
   password: string;
+  passwordConfirmation: string;
 }
 
 const schema = yup.object().shape({
-  email: yup.string().required('Informe o e-mail'),
-  password: yup.string().required('Informa a senha'),
+  name: yup.string().required('Nome obrigatório'),
+  email: yup
+    .string()
+    .email('Digite um e-mail válido')
+    .required('E-mail obrigatório'),
+  password: yup.string().min(6, 'No mínimo 6 digitos').required(),
+  passwordConfirmation: yup
+    .string()
+    .oneOf([yup.ref('password'), null], 'Passwords must match')
+    .required(),
 });
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
   const { navigate } = useNavigation();
+
   const {
     control,
     handleSubmit,
@@ -41,7 +52,9 @@ const Login: React.FC = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
 
+  const emailInputRef = useRef<TextInput | null>(null);
   const passwordInputRef = useRef<TextInput | null>(null);
+  const confirmPasswordInputRef = useRef<TextInput | null>(null);
 
   const onSubmit = (data: FormData) => {
     try {
@@ -72,6 +85,16 @@ const Login: React.FC = () => {
           <Title>Cervejas do Vale</Title>
 
           <AuthInput
+            name="name"
+            placeholder="Nome"
+            editable={!loading}
+            control={control}
+            error={errors.name?.message}
+            onSubmitEditing={() => emailInputRef.current?.focus()}
+          />
+
+          <AuthInput
+            ref={emailInputRef}
             name="email"
             keyboardType="email-address"
             autoCapitalize="none"
@@ -90,18 +113,31 @@ const Login: React.FC = () => {
             placeholder="Senha"
             control={control}
             error={errors.password?.message}
+            blurOnSubmit={false}
+            onSubmitEditing={() => confirmPasswordInputRef.current?.focus()}
+          />
+
+          <AuthInput
+            ref={confirmPasswordInputRef}
+            secureTextEntry
+            editable={!loading}
+            name="passwordConfirmation"
+            placeholder="Confirmar senha"
+            control={control}
+            error={errors.passwordConfirmation?.message}
+            blurOnSubmit={false}
             onSubmitEditing={handleSubmit(onSubmit, onInvalid)}
           />
 
-          <Button onPress={handleSubmit(onSubmit, onInvalid)}>Acessar</Button>
+          <Button onPress={handleSubmit(onSubmit, onInvalid)}>Registrar</Button>
 
           <RegisterContainer>
-            <RegisterText>{'Não possui conta? '}</RegisterText>
+            <RegisterText>{'Já tem conta? '}</RegisterText>
 
             <RegisterButton
-              onPress={() => navigate('Auth', { screen: 'Register' })}
+              onPress={() => navigate('Auth', { screen: 'Login' })}
             >
-              <RegisterText button>Registre-se</RegisterText>
+              <RegisterText button>Faça login</RegisterText>
             </RegisterButton>
           </RegisterContainer>
         </Content>
@@ -110,4 +146,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Register;

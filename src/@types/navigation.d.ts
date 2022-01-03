@@ -7,6 +7,7 @@ export type AuthStackParamList = {
 
 export type AppStackParamList = {
   Auth: NavigatorScreenParams<AuthStackParamList>;
+  Home: undefined;
 };
 
 declare global {

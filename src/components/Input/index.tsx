@@ -1,25 +1,28 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useMemo, useState } from 'react';
 import { TextInputProps, TextInput as TextInputRN } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
-import {
-  Container,
-  InputContainer,
-  InputLabel,
-  TextInput,
-  ShowPasswordButton,
-  ErrorLabel,
-} from './styles';
+import { useTheme } from 'styled-components/native';
+import { Container, TextInput, Icon, PasswordButton } from './styles';
 
 export interface InputProps extends TextInputProps {
-  label?: string;
   error?: string;
-  disabled?: boolean;
+  icon?: string;
 }
 
 const Input = forwardRef<TextInputRN, InputProps>(
-  ({ label, error, disabled, onChangeText, ...props }, ref) => {
+  ({ icon, error, style, ...props }, ref) => {
+    const { colors } = useTheme();
+
     const [isFocused, setIsFocused] = useState<boolean>(false);
+    const [isFilled, setIsFilled] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
+
+    const inputIconName = useMemo(() => {
+      if (props.secureTextEntry) {
+        return showPassword ? 'eye-off' : 'eye';
+      }
+
+      return icon || '';
+    }, [icon, props.secureTextEntry, showPassword]);
 
     const handleInputFocus = () => {
       setIsFocused(true);
@@ -27,36 +30,39 @@ const Input = forwardRef<TextInputRN, InputProps>(
 
     const handleInputBlur = () => {
       setIsFocused(false);
+      setIsFilled(!!props.value);
+    };
+
+    const handlePressPasswordButton = () => {
+      if (props.secureTextEntry) {
+        setShowPassword(state => !state);
+      }
     };
 
     return (
-      <Container>
-        {label && <InputLabel>{label}</InputLabel>}
+      <Container isFocused={isFocused} isErrored={!!error} style={style}>
+        <TextInput
+          {...props}
+          ref={ref}
+          keyboardAppearance="dark"
+          placeholderTextColor={colors.gray}
+          secureTextEntry={props.secureTextEntry && !showPassword}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
+        />
 
-        <InputContainer
-          isFocused={isFocused}
-          isErrored={!!error}
-          disabled={disabled}
-        >
-          <TextInput
-            {...props}
-            ref={ref}
-            editable={props.editable !== undefined ? props.editable : !disabled}
-            //  placeholderTextColor={colors.tinGrey}
-            onFocus={handleInputFocus}
-            onBlur={handleInputBlur}
-            secureTextEntry={props.secureTextEntry && !showPassword}
-            onChangeText={onChangeText}
-          />
-
-          {props.secureTextEntry && (
-            <ShowPasswordButton onPress={() => setShowPassword(!showPassword)}>
-              <Icon name={showPassword ? 'eye-off' : 'eye'} />
-            </ShowPasswordButton>
-          )}
-        </InputContainer>
-
-        <ErrorLabel hidden={!error}>{error}</ErrorLabel>
+        {(icon || props.secureTextEntry) && (
+          <PasswordButton
+            activeOpacity={props.secureTextEntry ? 0.3 : 1}
+            onPress={handlePressPasswordButton}
+          >
+            <Icon
+              name={inputIconName}
+              size={20}
+              color={isFocused || isFilled ? colors.primary : colors.gray}
+            />
+          </PasswordButton>
+        )}
       </Container>
     );
   },

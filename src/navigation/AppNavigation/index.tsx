@@ -1,6 +1,7 @@
 import React from 'react';
 // import SplashScreen from 'react-native-splash-screen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Home from '~/scenes/Home';
 import { AppStackParamList } from '~/@types/navigation';
 import AuthNavigation from '../AuthNavigation';
 
@@ -20,6 +21,8 @@ const AppNavigation: React.FC = () => {
         }}
       >
         <AppStack.Screen name="Auth" component={AuthNavigation} />
+
+        <AppStack.Screen name="Home" component={Home} />
       </AppStack.Group>
     </AppStack.Navigator>
   );

@@ -9,7 +9,7 @@ const App: React.FC = () => {
   return (
     <NavigationContainer>
       <ThemeProvider theme={theme}>
-        <StatusBar barStyle="dark-content" />
+        <StatusBar barStyle="light-content" />
 
         <AppNavigation />
       </ThemeProvider>
