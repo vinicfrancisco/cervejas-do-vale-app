@@ -1,4 +1,3 @@
-import { ImageSourcePropType } from 'react-native';
 import { NavigatorScreenParams } from '@react-navigation/native';
 
 export type AuthStackParamList = {
