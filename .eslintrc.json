@@ -20,7 +20,13 @@
     "ecmaVersion": 13,
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint", "react-hooks", "prettier"],
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "react-hooks",
+    "prettier",
+    "eslint-plugin-import-helpers"
+  ],
   "rules": {
     "prettier/prettier": "error",
     "react-hooks/rules-of-hooks": "error",
@@ -34,6 +40,13 @@
     "no-use-before-define": "off",
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/no-use-before-define": ["error"],
+    "react/function-component-definition": [
+      2,
+      {
+        "namedComponents": "arrow-function",
+        "unnamedComponents": "arrow-function"
+      }
+    ],
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -41,11 +54,32 @@
         "ts": "never",
         "tsx": "never"
       }
+    ],
+    "import-helpers/order-imports": [
+      "warn",
+      {
+        "newlinesBetween": "never",
+        "groups": [
+          "/^react/",
+          "/^react-native/",
+          "module",
+          ["/^~/components/"],
+          "/^~/scenes/",
+          "/^~/assets/",
+          "/^~//",
+          ["parent", "sibling", "index"]
+        ],
+        "alphabetize": { "order": "asc", "ignoreCase": true }
+      }
     ]
   },
   "settings": {
     "import/resolver": {
-      "typescript": {}
+      "typescript": {},
+      "babel-plugin-root-import": {
+        "rootPathPrefix": "~",
+        "rootPathSuffix": "src"
+      }
     }
   }
 }
