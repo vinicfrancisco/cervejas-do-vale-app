@@ -16,7 +16,7 @@ export const Content = styled.View`
   align-items: center;
   flex: 1;
   justify-content: center;
-  padding: 0 32px ${Platform.OS === 'ios' ? 40 : 150}px;
+  padding: 0 32px 40px;
 `;
 
 export const BeerLogo = styled(BeerSVG)``;
