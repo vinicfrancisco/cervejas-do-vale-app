@@ -61,7 +61,7 @@ const Login: React.FC = () => {
         index: 0,
         routes: [
           {
-            name: 'Home',
+            name: 'Main',
           },
         ],
       });

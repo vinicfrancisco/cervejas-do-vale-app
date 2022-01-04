@@ -5,9 +5,15 @@ export type AuthStackParamList = {
   Register: undefined;
 };
 
+export type TabNavigationParamList = {
+  Home: undefined;
+  Favorites: undefined;
+  Profile: undefined;
+};
+
 export type AppStackParamList = {
   Auth: NavigatorScreenParams<AuthStackParamList>;
-  Home: undefined;
+  Main: NavigatorScreenParams<TabNavigationParamList>;
 };
 
 declare global {

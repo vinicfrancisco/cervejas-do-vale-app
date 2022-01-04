@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Home from '~/scenes/Home';
 import { AppStackParamList } from '~/@types/navigation';
 import useAuth from '~/hooks/useAuth';
 import useUser from '~/hooks/useUser';
 import { USER_TOKEN } from '~/util/consts';
 import AuthNavigation from '../AuthNavigation';
+import TabNavigation from '../TabNavigation';
 
 const AppStack = createNativeStackNavigator<AppStackParamList>();
 
@@ -38,7 +38,7 @@ const AppNavigation: React.FC = () => {
 
   return (
     <AppStack.Navigator
-      initialRouteName={user ? 'Home' : 'Auth'}
+      initialRouteName={user ? 'Main' : 'Auth'}
       screenOptions={{
         animation: 'slide_from_bottom',
       }}
@@ -50,7 +50,7 @@ const AppNavigation: React.FC = () => {
       >
         <AppStack.Screen name="Auth" component={AuthNavigation} />
 
-        <AppStack.Screen name="Home" component={Home} />
+        <AppStack.Screen name="Main" component={TabNavigation} />
       </AppStack.Group>
     </AppStack.Navigator>
   );
