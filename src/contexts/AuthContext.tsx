@@ -6,6 +6,8 @@ import { reset } from '~/navigation/RootNavigation';
 import getProfileUseCase from '~/useCases/Auth/GetProfileUseCase';
 import loginUseCase from '~/useCases/Auth/LoginUseCase';
 import registerUseCase from '~/useCases/Auth/RegisterUseCase';
+import updateProfileImageUseCase from '~/useCases/Profile/UpdateProfileImageUseCase';
+import updateProfileUseCase from '~/useCases/Profile/UpdateProfileUseCase';
 import { USER_TOKEN } from '~/util/consts';
 
 interface LoginProps {
@@ -19,12 +21,21 @@ interface RegisterProps {
   password: string;
 }
 
+interface UpdateUserProfileProps {
+  name: string;
+  email: string;
+  oldPassword: string;
+  newPassword: string;
+}
+
 export interface AuthContextData {
   user: UserDTO | null;
   login: (data: LoginProps) => Promise<void>;
   register: (data: RegisterProps) => Promise<void>;
   logout: () => Promise<void>;
   loadCurrentUserData: () => Promise<void>;
+  updateUserProfile: (data: UpdateUserProfileProps) => Promise<void>;
+  updateProfileImage: (source: string) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextData>(
@@ -67,6 +78,31 @@ export const AuthProvider: React.FC = ({ children }) => {
     setUser(userData);
   }, []);
 
+  const updateUserProfile = useCallback(
+    async ({
+      name,
+      email,
+      oldPassword,
+      newPassword,
+    }: UpdateUserProfileProps) => {
+      const userData = await updateProfileUseCase({
+        name,
+        email,
+        oldPassword,
+        newPassword,
+      });
+
+      setUser(userData);
+    },
+    [],
+  );
+
+  const updateProfileImage = useCallback(async source => {
+    const userData = await updateProfileImageUseCase(source);
+
+    setUser(userData);
+  }, []);
+
   const AuthContextValue = useMemo((): AuthContextData => {
     return {
       user,
@@ -74,8 +110,18 @@ export const AuthProvider: React.FC = ({ children }) => {
       register,
       logout,
       loadCurrentUserData,
+      updateUserProfile,
+      updateProfileImage,
     };
-  }, [loadCurrentUserData, login, logout, register, user]);
+  }, [
+    loadCurrentUserData,
+    login,
+    logout,
+    register,
+    updateProfileImage,
+    updateUserProfile,
+    user,
+  ]);
 
   return (
     <AuthContext.Provider value={AuthContextValue}>

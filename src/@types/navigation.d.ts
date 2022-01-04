@@ -5,10 +5,15 @@ export type AuthStackParamList = {
   Register: undefined;
 };
 
+export type ProfileStackParamsList = {
+  MyProfile: undefined;
+  Edit: undefined;
+};
+
 export type TabNavigationParamList = {
   Home: undefined;
   Favorites: undefined;
-  Profile: undefined;
+  Profile: NavigatorScreenParams<ProfileStackParamsList>;
 };
 
 export type AppStackParamList = {

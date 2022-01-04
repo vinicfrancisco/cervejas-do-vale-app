@@ -14,7 +14,7 @@ const BackButton: React.FC<BackButtonProps> = ({ onPress }) => {
 
   return (
     <BackButtonContainer onPress={onPress || goBack}>
-      <Icon name="chevron-left" size={32} color={colors.gray} />
+      <Icon name="chevron-left" size={32} color={colors.primary} />
     </BackButtonContainer>
   );
 };

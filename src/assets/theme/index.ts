@@ -12,7 +12,7 @@ const theme = {
     gray: '#8B8C89',
 
     red: '#FF6584',
-    green: '#3F826D',
+    green: '#56E39F',
   },
   fonts: {
     regular: 'Roboto-Regular',
@@ -23,6 +23,7 @@ const theme = {
     small: `${RFValue(12)}px`,
     medium: `${RFValue(16)}px`,
     large: `${RFValue(20)}px`,
+    extraLarge: `${RFValue(32)}px`,
   },
 };
 

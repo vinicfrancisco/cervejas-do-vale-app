@@ -1,4 +1,3 @@
-import { Platform } from 'react-native';
 import styled from 'styled-components/native';
 import InputForm from '~/components/Form/InputForm';
 import BeerSVG from '~/assets/svg/Beer.svg';

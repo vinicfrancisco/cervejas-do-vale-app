@@ -7,6 +7,7 @@ import Favorites from '~/scenes/Favorites';
 import Home from '~/scenes/Home';
 import Profile from '~/scenes/Profile';
 import { TabNavigationParamList } from '~/@types/navigation';
+import ProfileNavigation from '../ProfileNavigation';
 import { BottomTabBackground } from './styles';
 
 interface IconsType {
@@ -68,8 +69,9 @@ const TabNavigation: React.FC = () => {
 
       <BottomTabNavigation.Screen
         name="Profile"
-        component={Profile}
+        component={ProfileNavigation}
         options={{
+          headerShown: false,
           tabBarLabel: 'Perfil',
         }}
       />
