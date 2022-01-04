@@ -87,6 +87,7 @@ const Register: React.FC = () => {
           <AuthInput
             name="name"
             placeholder="Nome"
+            icon="user"
             editable={!loading}
             control={control}
             error={errors.name?.message}
@@ -98,6 +99,7 @@ const Register: React.FC = () => {
             name="email"
             keyboardType="email-address"
             autoCapitalize="none"
+            icon="mail"
             placeholder="E-mail"
             editable={!loading}
             control={control}

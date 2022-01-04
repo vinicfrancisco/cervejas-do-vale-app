@@ -75,6 +75,7 @@ const Login: React.FC = () => {
             name="email"
             keyboardType="email-address"
             autoCapitalize="none"
+            icon="mail"
             placeholder="E-mail"
             editable={!loading}
             control={control}
