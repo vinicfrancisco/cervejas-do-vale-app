@@ -13,6 +13,7 @@ const Input = forwardRef<TextInputRN, InputProps>(
     const { colors } = useTheme();
 
     const [isFocused, setIsFocused] = useState<boolean>(false);
+    const [hasFocused, setHasFocused] = useState<boolean>(false);
     const [isFilled, setIsFilled] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -26,6 +27,7 @@ const Input = forwardRef<TextInputRN, InputProps>(
 
     const handleInputFocus = () => {
       setIsFocused(true);
+      setHasFocused(true);
     };
 
     const handleInputBlur = () => {
@@ -46,7 +48,7 @@ const Input = forwardRef<TextInputRN, InputProps>(
           ref={ref}
           keyboardAppearance="dark"
           placeholderTextColor={colors.gray}
-          secureTextEntry={props.secureTextEntry && !showPassword}
+          secureTextEntry={props.secureTextEntry && !showPassword && hasFocused}
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
         />

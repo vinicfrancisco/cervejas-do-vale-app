@@ -10,6 +10,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigation } from '@react-navigation/native';
 import * as yup from 'yup';
 import Button from '~/components/Button';
+import useAlert from '~/hooks/useAlert';
+import useAuth from '~/hooks/useAuth';
 import {
   Container,
   Content,
@@ -42,8 +44,9 @@ const schema = yup.object().shape({
 });
 
 const Register: React.FC = () => {
-  const { navigate } = useNavigation();
-
+  const { navigate, reset } = useNavigation();
+  const { register } = useAuth();
+  const { showAlert } = useAlert();
   const {
     control,
     handleSubmit,
@@ -56,13 +59,31 @@ const Register: React.FC = () => {
   const passwordInputRef = useRef<TextInput | null>(null);
   const confirmPasswordInputRef = useRef<TextInput | null>(null);
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     try {
       Keyboard.dismiss();
 
       setLoading(true);
 
-      console.log(data);
+      const { name, email, password } = data;
+
+      await register({ name, email, password });
+
+      reset({
+        index: 0,
+        routes: [
+          {
+            name: 'Home',
+          },
+        ],
+      });
+    } catch {
+      showAlert({
+        show: true,
+        title: 'Falha ao realizar cadastro',
+        description: 'Verifique os dados informados e tente novamente',
+        buttonLabel: 'Ok, entendi',
+      });
     } finally {
       setLoading(false);
     }
@@ -116,6 +137,7 @@ const Register: React.FC = () => {
             control={control}
             error={errors.password?.message}
             blurOnSubmit={false}
+            textContentType="oneTimeCode"
             onSubmitEditing={() => confirmPasswordInputRef.current?.focus()}
           />
 
@@ -128,10 +150,13 @@ const Register: React.FC = () => {
             control={control}
             error={errors.passwordConfirmation?.message}
             blurOnSubmit={false}
+            textContentType="oneTimeCode"
             onSubmitEditing={handleSubmit(onSubmit, onInvalid)}
           />
 
-          <Button onPress={handleSubmit(onSubmit, onInvalid)}>Registrar</Button>
+          <Button loading={loading} onPress={handleSubmit(onSubmit, onInvalid)}>
+            Registrar
+          </Button>
 
           <RegisterContainer>
             <RegisterText>{'Já tem conta? '}</RegisterText>

@@ -10,6 +10,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigation } from '@react-navigation/native';
 import * as yup from 'yup';
 import Button from '~/components/Button';
+import useAlert from '~/hooks/useAlert';
+import useAuth from '~/hooks/useAuth';
 import {
   Container,
   Content,
@@ -32,7 +34,9 @@ const schema = yup.object().shape({
 });
 
 const Login: React.FC = () => {
-  const { navigate } = useNavigation();
+  const { navigate, reset } = useNavigation();
+  const { login } = useAuth();
+  const { showAlert } = useAlert();
   const {
     control,
     handleSubmit,
@@ -43,13 +47,31 @@ const Login: React.FC = () => {
 
   const passwordInputRef = useRef<TextInput | null>(null);
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     try {
       Keyboard.dismiss();
 
       setLoading(true);
 
-      console.log(data);
+      const { email, password } = data;
+
+      await login({ email, password });
+
+      reset({
+        index: 0,
+        routes: [
+          {
+            name: 'Home',
+          },
+        ],
+      });
+    } catch {
+      showAlert({
+        show: true,
+        title: 'Falha ao realizar login',
+        description: 'Verifique suas credenciais e tente novamente',
+        buttonLabel: 'Ok, entendi',
+      });
     } finally {
       setLoading(false);
     }
@@ -75,6 +97,8 @@ const Login: React.FC = () => {
             name="email"
             keyboardType="email-address"
             autoCapitalize="none"
+            autoComplete="email"
+            autoCorrect={false}
             icon="mail"
             placeholder="E-mail"
             editable={!loading}
@@ -94,7 +118,9 @@ const Login: React.FC = () => {
             onSubmitEditing={handleSubmit(onSubmit, onInvalid)}
           />
 
-          <Button onPress={handleSubmit(onSubmit, onInvalid)}>Acessar</Button>
+          <Button loading={loading} onPress={handleSubmit(onSubmit, onInvalid)}>
+            Acessar
+          </Button>
 
           <RegisterContainer>
             <RegisterText>{'Não possui conta? '}</RegisterText>
