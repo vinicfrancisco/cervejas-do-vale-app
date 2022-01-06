@@ -6,8 +6,6 @@ export const Container = styled.View`
   flex: 1;
 `;
 
-export const Title = styled.Text``;
-
 export const Separator = styled.View`
   background: ${({ theme }) => theme.colors.gray};
   height: ${StyleSheet.hairlineWidth}px;

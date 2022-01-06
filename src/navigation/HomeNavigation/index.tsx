@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { defaultHeaderProps } from '~/components/Header';
 import BackButton from '~/components/Header/BackButton';
 import Detail from '~/scenes/Detail';
+import Filters from '~/scenes/Filters';
 import Home from '~/scenes/Home';
 import { HomeStackParamsList } from '~/@types/navigation';
 
@@ -15,7 +16,6 @@ const HomeNavigation: React.FC = () => {
   return (
     <HomeStack.Navigator
       screenOptions={{
-        ...defaultHeaderProps,
         gestureEnabled: true,
         animation: 'slide_from_right',
       }}
@@ -23,16 +23,12 @@ const HomeNavigation: React.FC = () => {
       <HomeStack.Screen
         name="BeersList"
         component={Home}
-        options={{
-          title: 'Cervejas do Vale',
-        }}
+        options={{ headerShown: false }}
       />
 
-      <HomeStack.Screen
-        name="BeerDetail"
-        component={Detail}
-        options={{
-          title: 'Detalhe',
+      <HomeStack.Group
+        screenOptions={{
+          ...defaultHeaderProps,
           headerLeft: () => (
             <BackButton
               onPress={() =>
@@ -44,7 +40,17 @@ const HomeNavigation: React.FC = () => {
             />
           ),
         }}
-      />
+      >
+        <HomeStack.Screen
+          name="Filters"
+          component={Filters}
+          options={{
+            title: 'Filtros',
+          }}
+        />
+
+        <HomeStack.Screen name="BeerDetail" component={Detail} />
+      </HomeStack.Group>
     </HomeStack.Navigator>
   );
 };

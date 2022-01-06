@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { reset } from '~/navigation/RootNavigation';
 import { USER_TOKEN } from '~/util/consts';
 
 const host = Platform.select({
@@ -27,5 +28,20 @@ api.interceptors.request.use(async (config: AxiosRequestConfig) => {
 
   return config;
 });
+
+api.interceptors.response.use(
+  (response: AxiosResponse) => {
+    return Promise.resolve(response);
+  },
+  async (error: AxiosError) => {
+    if (error?.response?.status === 401) {
+      await AsyncStorage.multiRemove([USER_TOKEN]);
+
+      reset('Auth');
+    }
+
+    return Promise.reject(error);
+  },
+);
 
 export default api;

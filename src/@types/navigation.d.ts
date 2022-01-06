@@ -12,6 +12,7 @@ export type ProfileStackParamsList = {
 
 export type HomeStackParamsList = {
   BeersList: undefined;
+  Filters: undefined;
   BeerDetail: {
     beerId: string;
     beerName: string;

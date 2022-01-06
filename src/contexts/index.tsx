@@ -1,11 +1,14 @@
 import React from 'react';
 import { AlertProvider } from './AlertContext';
 import { AuthProvider } from './AuthContext';
+import { BeersProvider } from './BeersContext';
 
 const AppProvider: React.FC = ({ children }) => {
   return (
     <AuthProvider>
-      <AlertProvider>{children}</AlertProvider>
+      <AlertProvider>
+        <BeersProvider>{children}</BeersProvider>
+      </AlertProvider>
     </AuthProvider>
   );
 };
