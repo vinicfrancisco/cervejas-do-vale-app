@@ -21,6 +21,7 @@ const Home: React.FC = () => {
 
   // TODO: LOADING
   // TODO: ERROR
+  // TODO: EMPTY LIST MESSAGE
   const { data, isLoading, isRefetching, isError, refetch } = useQuery(
     ['beers', { ...filters, search: debouncedValue }],
     async ({ queryKey }) => {

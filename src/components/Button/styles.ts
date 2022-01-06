@@ -9,7 +9,7 @@ export const Background = styled.View<{ disabled?: boolean }>`
   align-items: center;
   background: ${({ theme }) => theme.colors.primary};
   border-radius: 10px;
-  height: 60px;
+  height: 52px;
   justify-content: center;
   margin-top: 8px;
   opacity: ${({ disabled }) => (disabled ? 0.7 : 1)};

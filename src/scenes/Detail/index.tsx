@@ -90,7 +90,10 @@ const Detail: React.VFC = () => {
 
   const formatGraduation = useMemo(() => {
     if (data) {
-      return `${parseFloat(data.alcoholic_degree) * 100}%`;
+      return `${String(parseFloat(data.alcoholic_degree) * 100).replace(
+        '.',
+        ',',
+      )}%`;
     }
 
     return '';
