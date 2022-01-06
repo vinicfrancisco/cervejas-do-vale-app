@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from 'styled-components';
+import EmptyList from '~/components/EmptyList';
 import Rating from '~/components/Rating';
 import RatingModal from '~/components/RatingModal';
 import { HomeStackParamsList } from '~/@types/navigation';
@@ -90,10 +91,9 @@ const Detail: React.VFC = () => {
 
   const formatGraduation = useMemo(() => {
     if (data) {
-      return `${String(parseFloat(data.alcoholic_degree) * 100).replace(
-        '.',
-        ',',
-      )}%`;
+      return `${String(
+        (parseFloat(data.alcoholic_degree) * 100).toFixed(1),
+      ).replace('.', ',')}%`;
     }
 
     return '';
@@ -136,7 +136,9 @@ const Detail: React.VFC = () => {
       <Container>
         {isLoading && <ActivityIndicator size="large" color={colors.primary} />}
 
-        {/* TODO: ERROR */}
+        {isError && (
+          <EmptyList label="Houve um erro ao buscar a cerveja desejada" />
+        )}
 
         {data && (
           <>
