@@ -10,8 +10,16 @@ export type ProfileStackParamsList = {
   Edit: undefined;
 };
 
+export type HomeStackParamsList = {
+  BeersList: undefined;
+  BeerDetail: {
+    beerId: string;
+    beerName: string;
+  };
+};
+
 export type TabNavigationParamList = {
-  Home: undefined;
+  Home: NavigatorScreenParams<HomeStackParamsList>;
   Favorites: undefined;
   Profile: NavigatorScreenParams<ProfileStackParamsList>;
 };

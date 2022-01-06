@@ -4,9 +4,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTheme } from 'styled-components';
 import { tabBarHeaderProps } from '~/components/Header';
 import Favorites from '~/scenes/Favorites';
-import Home from '~/scenes/Home';
-import Profile from '~/scenes/Profile';
 import { TabNavigationParamList } from '~/@types/navigation';
+import HomeNavigation from '../HomeNavigation';
 import ProfileNavigation from '../ProfileNavigation';
 import { BottomTabBackground } from './styles';
 
@@ -44,6 +43,7 @@ const TabNavigation: React.FC = () => {
     <BottomTabNavigation.Navigator
       screenOptions={({ route }) => ({
         ...tabBarHeaderProps,
+        headerShown: false,
         tabBarBackground: renderTabBarBackground,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.gray,
@@ -53,7 +53,7 @@ const TabNavigation: React.FC = () => {
     >
       <BottomTabNavigation.Screen
         name="Home"
-        component={Home}
+        component={HomeNavigation}
         options={{
           tabBarLabel: 'Descobrir',
         }}
@@ -71,7 +71,6 @@ const TabNavigation: React.FC = () => {
         name="Profile"
         component={ProfileNavigation}
         options={{
-          headerShown: false,
           tabBarLabel: 'Perfil',
         }}
       />
