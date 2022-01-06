@@ -19,9 +19,17 @@ export type HomeStackParamsList = {
   };
 };
 
+export type FavoriteStackParamsList = {
+  MyFavorites: undefined;
+  BeerDetail: {
+    beerId: string;
+    beerName: string;
+  };
+};
+
 export type TabNavigationParamList = {
   Home: NavigatorScreenParams<HomeStackParamsList>;
-  Favorites: undefined;
+  Favorites: NavigatorScreenParams<FavoriteStackParamsList>;
   Profile: NavigatorScreenParams<ProfileStackParamsList>;
 };
 

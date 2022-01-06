@@ -6,10 +6,11 @@ import Rating from '../Rating';
 import { Container, BeerImage, Title, Price } from './styles';
 
 interface BeerProps {
+  type?: 'Home' | 'Favorites';
   data: BeerDTO;
 }
 
-const Beer: React.VFC<BeerProps> = ({ data }) => {
+const Beer: React.VFC<BeerProps> = ({ data, type = 'Home' }) => {
   const { navigate } = useNavigation();
 
   const formattedPrice = useMemo(() => {
@@ -20,7 +21,7 @@ const Beer: React.VFC<BeerProps> = ({ data }) => {
     <Container
       onPress={() =>
         navigate('Main', {
-          screen: 'Home',
+          screen: type,
           params: {
             screen: 'BeerDetail',
             params: { beerId: data.id, beerName: data.name },

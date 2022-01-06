@@ -1,6 +1,6 @@
 import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, ListRenderItemInfo } from 'react-native';
-import { useQuery } from 'react-query';
+import { useInfiniteQuery } from 'react-query';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from 'styled-components';
 import { useDebounce } from 'use-debounce';
@@ -22,16 +22,35 @@ const Home: React.FC = () => {
   const [value, setValue] = useState<string>('');
   const [debouncedValue] = useDebounce(value, 500);
 
-  const { data, isLoading, isRefetching, isError, refetch } = useQuery(
+  const {
+    data,
+    isLoading,
+    isRefetching,
+    isError,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery(
     ['beers', { ...filters, search: debouncedValue }],
-    async ({ queryKey }) => {
+    async ({ queryKey, pageParam }) => {
       const [, appliedFilters] = queryKey;
 
       const response = await getBeersUseCase({
         ...(appliedFilters as GetBeersUseCaseProps),
+        page: pageParam,
       });
 
       return response;
+    },
+    {
+      getNextPageParam: (lastPage, pages) => {
+        if (pages.length < lastPage.total) {
+          return pages.length + 1;
+        }
+
+        return false;
+      },
     },
   );
 
@@ -39,6 +58,12 @@ const Home: React.FC = () => {
     ({ item: beer }: ListRenderItemInfo<BeerDTO>) => <Beer data={beer} />,
     [],
   );
+
+  const handleEndReached = () => {
+    if (!isFetchingNextPage && hasNextPage) {
+      fetchNextPage();
+    }
+  };
 
   useLayoutEffect(() => {
     setOptions({
@@ -55,7 +80,7 @@ const Home: React.FC = () => {
 
       {!!data && (
         <FlatList
-          data={data.data}
+          data={data.pages.map(page => page.data)?.flat()}
           keyExtractor={item => item.id}
           renderItem={renderItem}
           refreshing={isRefetching}
@@ -63,6 +88,13 @@ const Home: React.FC = () => {
           ListEmptyComponent={() => (
             <EmptyList label="Nenhum cerveja foi encontrada" />
           )}
+          ListFooterComponent={
+            isFetchingNextPage
+              ? () => <ActivityIndicator size="small" color={colors.primary} />
+              : null
+          }
+          onEndReached={handleEndReached}
+          onEndReachedThreshold={0.2}
           contentContainerStyle={{
             flexGrow: 1,
             padding: 16,

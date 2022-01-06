@@ -3,8 +3,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTheme } from 'styled-components';
 import { tabBarHeaderProps } from '~/components/Header';
-import Favorites from '~/scenes/Favorites';
 import { TabNavigationParamList } from '~/@types/navigation';
+import FavoritesNavigation from '../FavoritesNavigation';
 import HomeNavigation from '../HomeNavigation';
 import ProfileNavigation from '../ProfileNavigation';
 import { BottomTabBackground } from './styles';
@@ -61,7 +61,7 @@ const TabNavigation: React.FC = () => {
 
       <BottomTabNavigation.Screen
         name="Favorites"
-        component={Favorites}
+        component={FavoritesNavigation}
         options={{
           tabBarLabel: 'Favoritas',
         }}

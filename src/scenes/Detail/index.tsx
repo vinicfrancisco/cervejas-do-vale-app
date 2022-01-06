@@ -55,6 +55,7 @@ const Detail: React.VFC = () => {
     {
       onSuccess: ({ hasFavorited }: FavoriteBeerUseCaseResponse) => {
         queryClient.invalidateQueries('beers');
+        queryClient.invalidateQueries('favorites');
         queryClient.setQueryData(beerDataKey, {
           ...data,
           hasFavorited,
@@ -72,6 +73,7 @@ const Detail: React.VFC = () => {
     {
       onSuccess: (beer: BeerDTO) => {
         queryClient.invalidateQueries('beers');
+        queryClient.invalidateQueries('favorites');
         queryClient.setQueryData(beerDataKey, {
           ...data,
           hasRated: beer.hasRated,

@@ -1,10 +1,14 @@
+import { StyleSheet } from 'react-native';
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
-  align-items: center;
   background: ${({ theme }) => theme.colors.black};
   flex: 1;
-  justify-content: center;
+  padding-top: 16px;
 `;
 
-export const Title = styled.Text``;
+export const Separator = styled.View`
+  background: ${({ theme }) => theme.colors.gray};
+  height: ${StyleSheet.hairlineWidth}px;
+  margin: 16px 0px;
+`;
