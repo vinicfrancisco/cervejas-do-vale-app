@@ -1,12 +1,9 @@
 import React, { useMemo, useState } from 'react';
-import { useQuery } from 'react-query';
 import { useNavigation } from '@react-navigation/native';
 import Picker from '~/components/Picker';
 import Radio from '~/components/Radio';
 import { BeersSort } from '~/contexts/BeersContext';
 import useBeersFilters from '~/hooks/useBeersFilters';
-import getBeerBrandsUseCase from '~/useCases/Beers/GetBeerBrandsUseCase';
-import getBeerTypesUseCase from '~/useCases/Beers/GetBeerTypesUseCase';
 import {
   Container,
   Subtitle,
@@ -19,11 +16,8 @@ import {
 
 const Filters: React.VFC = () => {
   const { goBack } = useNavigation();
-  const { filters, handleApplyFilters } = useBeersFilters();
-
-  const { data: brands } = useQuery('brands', getBeerBrandsUseCase);
-
-  const { data: types } = useQuery('types', getBeerTypesUseCase);
+  const { filters, beerBrands, beerTypes, handleApplyFilters } =
+    useBeersFilters();
 
   const [selectedSort, setSelectedSort] = useState<BeersSort | null>(
     filters.sort,
@@ -34,26 +28,18 @@ const Filters: React.VFC = () => {
   );
 
   const brandsOptions = useMemo(() => {
-    if (brands) {
-      return brands.map(brand => ({
-        label: brand.name,
-        value: brand.id,
-      }));
-    }
-
-    return [];
-  }, [brands]);
+    return beerBrands.map(brand => ({
+      label: brand.name,
+      value: brand.id,
+    }));
+  }, [beerBrands]);
 
   const typesOptions = useMemo(() => {
-    if (types) {
-      return types.map(type => ({
-        label: type.name,
-        value: type.id,
-      }));
-    }
-
-    return [];
-  }, [types]);
+    return beerTypes.map(type => ({
+      label: type.name,
+      value: type.id,
+    }));
+  }, [beerTypes]);
 
   const handleApplySort = (sort: BeersSort) => {
     setSelectedSort(state => {

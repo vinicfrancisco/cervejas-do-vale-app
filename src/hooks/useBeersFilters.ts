@@ -3,10 +3,15 @@ import { BeersContext, BeersContextData } from '~/contexts/BeersContext';
 
 type UseBeersFiltersData = Pick<
   BeersContextData,
-  'filters' | 'handleApplyFilters'
+  'filters' | 'handleApplyFilters' | 'beerBrands' | 'beerTypes'
 >;
 
 export default function useBeersFilters(): UseBeersFiltersData {
+  const beerBrands = useContextSelector(
+    BeersContext,
+    state => state.beerBrands,
+  );
+  const beerTypes = useContextSelector(BeersContext, state => state.beerTypes);
   const filters = useContextSelector(BeersContext, state => state.filters);
   const handleApplyFilters = useContextSelector(
     BeersContext,
@@ -15,6 +20,8 @@ export default function useBeersFilters(): UseBeersFiltersData {
 
   return {
     filters,
+    beerBrands,
+    beerTypes,
     handleApplyFilters,
   };
 }

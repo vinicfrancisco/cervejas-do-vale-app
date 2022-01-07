@@ -9,8 +9,12 @@ const host = Platform.select({
   ios: 'localhost',
 });
 
+const localUrl = `http://${host}:3333`;
+
+export const apiUrl = 'https://cervejas-do-vale.herokuapp.com';
+
 const api = axios.create({
-  baseURL: `http://${host}:3333`,
+  baseURL: apiUrl,
 });
 
 api.interceptors.request.use(async (config: AxiosRequestConfig) => {

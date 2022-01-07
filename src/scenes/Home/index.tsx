@@ -1,11 +1,17 @@
-import React, { useCallback, useLayoutEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import { ActivityIndicator, FlatList, ListRenderItemInfo } from 'react-native';
 import { useInfiniteQuery } from 'react-query';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from 'styled-components';
 import { useDebounce } from 'use-debounce';
 import Beer from '~/components/Beer';
 import EmptyList from '~/components/EmptyList';
+import { HomeStackParamsList } from '~/@types/navigation';
 import { BeerDTO } from '~/dtos/beers';
 import useBeersFilters from '~/hooks/useBeersFilters';
 import getBeersUseCase, {
@@ -14,8 +20,11 @@ import getBeersUseCase, {
 import Header from './components/Header';
 import { Container, Separator } from './styles';
 
+type HomeRouteProp = RouteProp<HomeStackParamsList, 'BeersList'>;
+
 const Home: React.FC = () => {
   const { setOptions } = useNavigation();
+  const { params } = useRoute<HomeRouteProp>();
   const { filters } = useBeersFilters();
   const { colors } = useTheme();
 
@@ -71,6 +80,10 @@ const Home: React.FC = () => {
       header: () => <Header value={value} onChangeText={setValue} />,
     });
   }, [setOptions, value]);
+
+  useEffect(() => {
+    setValue(`${params?.brand || ''} ${params?.type || ''}`.trim());
+  }, [params]);
 
   return (
     <Container>
