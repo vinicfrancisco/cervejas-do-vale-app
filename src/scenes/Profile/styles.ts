@@ -44,14 +44,14 @@ export const Separator = styled.View`
 `;
 
 export const AlexaCodeLabel = styled.Text`
-  color: ${({ theme }) => theme.colors.green};
+  color: ${({ theme }) => theme.colors.alexa};
   font-family: ${({ theme }) => theme.fonts.medium};
   font-size: ${({ theme }) => theme.fontSize.medium};
   margin-top: 32px;
 `;
 
 export const AlexaCode = styled.Text`
-  color: ${({ theme }) => theme.colors.green};
+  color: ${({ theme }) => theme.colors.alexa};
   font-family: ${({ theme }) => theme.fonts.bold};
   font-size: ${({ theme }) => theme.fontSize.extraLarge};
   margin-top: 24px;

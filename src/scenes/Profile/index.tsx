@@ -65,7 +65,7 @@ const Profile: React.FC = () => {
 
           <AlexaCodeLabel>Seu código Alexa é:</AlexaCodeLabel>
 
-          <AlexaCode>3016</AlexaCode>
+          <AlexaCode>{user.code.code}</AlexaCode>
         </>
       )}
     </Container>

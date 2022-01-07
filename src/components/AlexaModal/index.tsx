@@ -2,6 +2,7 @@ import React from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from 'styled-components';
+import useUser from '~/hooks/useUser';
 import { Modal, Container, CloseButton, Code, Tips, Title } from './styles';
 
 interface AlexaModalProps {
@@ -15,6 +16,7 @@ const AlexaModal: React.VFC<AlexaModalProps> = ({
   visible,
   onClose,
 }) => {
+  const { user } = useUser();
   const { colors } = useTheme();
 
   return (
@@ -46,7 +48,7 @@ const AlexaModal: React.VFC<AlexaModalProps> = ({
 
             <Tips>"Alexa, meu código é..."</Tips>
 
-            <Code>1234</Code>
+            <Code>{user?.code.code || ''}</Code>
           </>
         )}
       </Container>
