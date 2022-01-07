@@ -231,7 +231,8 @@ project.ext.vectoricons = [
   iconFontNames: [
     'Feather.ttf',
     'Ionicons.ttf',
-    'MaterialIcons.ttf'
+    'MaterialIcons.ttf',
+    'MaterialCommunityIcons.ttf'
   ]
 ]
 

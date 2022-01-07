@@ -1,31 +1,24 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from 'react';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, ListRenderItemInfo } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useInfiniteQuery } from 'react-query';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from 'styled-components';
 import { useDebounce } from 'use-debounce';
 import Beer from '~/components/Beer';
 import EmptyList from '~/components/EmptyList';
-import { HomeStackParamsList } from '~/@types/navigation';
 import { BeerDTO } from '~/dtos/beers';
 import useBeersFilters from '~/hooks/useBeersFilters';
 import getBeersUseCase, {
   GetBeersUseCaseProps,
 } from '~/useCases/Beers/GetBeersUseCase';
 import Header from './components/Header';
-import { Container, Separator } from './styles';
-
-type HomeRouteProp = RouteProp<HomeStackParamsList, 'BeersList'>;
+import { Container, Separator, AlexaButton } from './styles';
 
 const Home: React.FC = () => {
   const { setOptions } = useNavigation();
-  const { params } = useRoute<HomeRouteProp>();
-  const { filters } = useBeersFilters();
+  const { filters, openAlexaModal } = useBeersFilters();
   const { colors } = useTheme();
 
   const [value, setValue] = useState<string>('');
@@ -81,10 +74,6 @@ const Home: React.FC = () => {
     });
   }, [setOptions, value]);
 
-  useEffect(() => {
-    setValue(`${params?.brand || ''} ${params?.type || ''}`.trim());
-  }, [params]);
-
   return (
     <Container>
       {isLoading && <ActivityIndicator size="large" color={colors.primary} />}
@@ -116,6 +105,10 @@ const Home: React.FC = () => {
           ItemSeparatorComponent={() => <Separator />}
         />
       )}
+
+      <AlexaButton onPress={openAlexaModal}>
+        <Icon name="amazon-alexa" color={colors.alexa} size={RFValue(80)} />
+      </AlexaButton>
     </Container>
   );
 };

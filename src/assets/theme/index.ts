@@ -13,10 +13,12 @@ const theme = {
 
     red: '#FF6584',
     green: '#56E39F',
+    alexa: '#78E5FF',
   },
   fonts: {
     regular: 'Roboto-Regular',
     medium: 'Roboto-Medium',
+    mediumItalic: 'Roboto-MediumItalic',
     bold: 'Roboto-Bold',
   },
   fontSize: {

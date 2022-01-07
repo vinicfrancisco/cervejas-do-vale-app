@@ -1,15 +1,7 @@
-import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { reset } from '~/navigation/RootNavigation';
 import { USER_TOKEN } from '~/util/consts';
-
-const host = Platform.select({
-  android: '192.168.1.9',
-  ios: 'localhost',
-});
-
-const localUrl = `http://${host}:3333`;
 
 export const apiUrl = 'https://cervejas-do-vale.herokuapp.com';
 

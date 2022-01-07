@@ -3,7 +3,11 @@ import { BeersContext, BeersContextData } from '~/contexts/BeersContext';
 
 type UseBeersFiltersData = Pick<
   BeersContextData,
-  'filters' | 'handleApplyFilters' | 'beerBrands' | 'beerTypes'
+  | 'filters'
+  | 'handleApplyFilters'
+  | 'beerBrands'
+  | 'beerTypes'
+  | 'openAlexaModal'
 >;
 
 export default function useBeersFilters(): UseBeersFiltersData {
@@ -17,11 +21,16 @@ export default function useBeersFilters(): UseBeersFiltersData {
     BeersContext,
     state => state.handleApplyFilters,
   );
+  const openAlexaModal = useContextSelector(
+    BeersContext,
+    state => state.openAlexaModal,
+  );
 
   return {
     filters,
     beerBrands,
     beerTypes,
     handleApplyFilters,
+    openAlexaModal,
   };
 }

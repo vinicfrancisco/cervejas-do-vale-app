@@ -8,8 +8,10 @@ import React, {
 import { useNavigation } from '@react-navigation/native';
 import { Socket, io } from 'socket.io-client';
 import { createContext } from 'use-context-selector';
+import AlexaModal from '~/components/AlexaModal';
 import { BeerBrandDTO, BeerTypeDTO } from '~/dtos/beers';
 import useUser from '~/hooks/useUser';
+import { apiUrl } from '~/services/api';
 import getBeerBrandsUseCase from '~/useCases/Beers/GetBeerBrandsUseCase';
 import getBeerTypesUseCase from '~/useCases/Beers/GetBeerTypesUseCase';
 
@@ -37,6 +39,7 @@ export interface BeersContextData {
   beerTypes: BeerTypeDTO[];
   beerBrands: BeerBrandDTO[];
   handleApplyFilters: (filters: BeersFilters) => void;
+  openAlexaModal: () => void;
 }
 
 export const BeersContext = createContext<BeersContextData>(
@@ -47,6 +50,8 @@ export const BeersProvider: React.FC = ({ children }) => {
   const { navigate } = useNavigation();
   const { user } = useUser();
 
+  const [showAlexaModal, setShowAlexaModal] = useState<boolean>(false);
+  const [authenticated, setAuthenticated] = useState<boolean>(false);
   const [beerTypes, setBeerTypes] = useState<BeerTypeDTO[]>([]);
   const [beerBrands, setBeerBrands] = useState<BeerBrandDTO[]>([]);
   const [filters, setFilters] = useState<BeersFilters>({
@@ -61,14 +66,9 @@ export const BeersProvider: React.FC = ({ children }) => {
     setFilters(newFilters);
   }, []);
 
-  const BeersContextValue = useMemo((): BeersContextData => {
-    return {
-      filters,
-      beerBrands,
-      beerTypes,
-      handleApplyFilters,
-    };
-  }, [beerBrands, beerTypes, filters, handleApplyFilters]);
+  const openAlexaModal = useCallback(() => {
+    setShowAlexaModal(true);
+  }, []);
 
   useEffect(() => {
     async function loadBeersInfo() {
@@ -89,15 +89,15 @@ export const BeersProvider: React.FC = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    socketRef.current = io('https://cervejas-do-vale.herokuapp.com', {
+    socketRef.current = io(apiUrl, {
       transports: ['websocket'],
     });
 
     if (user) {
       socketRef.current.emit('connectUser', { user_id: user.id });
 
-      socketRef.current.on('Authenticated', args => {
-        console.log(args);
+      socketRef.current.on('Authenticated', () => {
+        setAuthenticated(true);
       });
 
       socketRef.current.on(
@@ -114,22 +114,42 @@ export const BeersProvider: React.FC = ({ children }) => {
               beerType.name.toLowerCase().trim() === type.toLowerCase().trim(),
           );
 
+          setShowAlexaModal(false);
           setFilters(state => ({
             ...state,
             beerBrandId: findBrandId?.id || '',
             beerTypeId: findTypeId?.id || '',
           }));
+
+          navigate('Main', { screen: 'Home', params: { screen: 'BeersList' } });
         },
       );
     }
 
     return () => {
+      setAuthenticated(false);
       socketRef.current?.disconnect();
     };
   }, [beerBrands, beerTypes, navigate, user]);
 
+  const BeersContextValue = useMemo((): BeersContextData => {
+    return {
+      filters,
+      beerBrands,
+      beerTypes,
+      openAlexaModal,
+      handleApplyFilters,
+    };
+  }, [beerBrands, beerTypes, filters, openAlexaModal, handleApplyFilters]);
+
   return (
     <BeersContext.Provider value={BeersContextValue}>
+      <AlexaModal
+        authenticated={authenticated}
+        visible={showAlexaModal}
+        onClose={() => setShowAlexaModal(false)}
+      />
+
       {children}
     </BeersContext.Provider>
   );
