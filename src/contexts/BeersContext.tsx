@@ -15,11 +15,6 @@ import { apiUrl } from '~/services/api';
 import getBeerBrandsUseCase from '~/useCases/Beers/GetBeerBrandsUseCase';
 import getBeerTypesUseCase from '~/useCases/Beers/GetBeerTypesUseCase';
 
-interface AlexaListBeersParams {
-  type: string;
-  brand: string;
-}
-
 export type BeersSort =
   | 'price'
   | '-price'
@@ -27,6 +22,12 @@ export type BeersSort =
   | '-graduation'
   | 'rating'
   | '-rating';
+
+interface AlexaListBeersParams {
+  type?: string;
+  brand?: string;
+  sort?: BeersSort;
+}
 
 export interface BeersFilters {
   sort: BeersSort | null;
@@ -102,28 +103,37 @@ export const BeersProvider: React.FC = ({ children }) => {
 
       socketRef.current.on(
         'ListBeers',
-        ({ brand, type }: AlexaListBeersParams) => {
+        ({ brand, type, sort }: AlexaListBeersParams) => {
           const findBrandId = beerBrands.find(
             beerBrand =>
               beerBrand.name.toLowerCase().trim() ===
-              brand.toLowerCase().trim(),
+              brand?.toLowerCase().trim(),
           );
 
           const findTypeId = beerTypes.find(
             beerType =>
-              beerType.name.toLowerCase().trim() === type.toLowerCase().trim(),
+              beerType.name.toLowerCase().trim() === type?.toLowerCase().trim(),
           );
 
           setShowAlexaModal(false);
-          setFilters(state => ({
-            ...state,
+          setFilters({
+            sort: sort || null,
             beerBrandId: findBrandId?.id || '',
             beerTypeId: findTypeId?.id || '',
-          }));
+          });
 
           navigate('Main', { screen: 'Home', params: { screen: 'BeersList' } });
         },
       );
+
+      socketRef.current.on('ListFavoriteBeers', () => {
+        setShowAlexaModal(false);
+
+        navigate('Main', {
+          screen: 'Favorites',
+          params: { screen: 'MyFavorites' },
+        });
+      });
     }
 
     return () => {
