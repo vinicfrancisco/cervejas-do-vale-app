@@ -1,6 +1,5 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { io, Socket } from 'socket.io-client';
 import { createContext } from 'use-context-selector';
 import { UserDTO } from '~/dtos/user';
 import { reset } from '~/navigation/RootNavigation';
@@ -45,16 +44,9 @@ export const AuthContext = createContext<AuthContextData>(
 
 export const AuthProvider: React.FC = ({ children }) => {
   const [user, setUser] = useState<UserDTO | null>(null);
-  const socketRef = useRef<Socket | null>(null);
 
   const login = useCallback(async ({ email, password }: LoginProps) => {
     const userData = await loginUseCase({ email, password });
-
-    socketRef.current = io('http://localhost:3333', {
-      transports: ['websocket'],
-    });
-
-    socketRef.current.emit('teste', { from: 'app' });
 
     setUser(userData);
   }, []);
